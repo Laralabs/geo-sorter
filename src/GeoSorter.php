@@ -36,12 +36,22 @@ class GeoSorter extends Collection
         $distanceArray  =   [];
         $postcodeField  =   config('geosorter.postcodeField');
         $sortOrder      =   config('geosorter.sortOrder');
-        $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($postcode),0,-3)))->first();
+        $length         =   strlen($postcode);
+        if($length > 4) {
+            $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($postcode),0,-3)))->first();
+        }else{
+            $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', $postcode)->first();
+        }
         $source         =   new Coordinate\Decimal($sourceOutcode->lat, $sourceOutcode->long);
 
         foreach($items as $item) {
             $itemPostcode = $item->$postcodeField;
-            $outcode = GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($itemPostcode), 0, -3)))->first();
+            $length = strlen($itemPostcode);
+            if($length > 4) {
+                $outcode = GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($itemPostcode), 0, -3)))->first();
+            }else{
+                $outcome = GeoSorterPostcodes::where('area_code', '=', $itemPostcode)->first();
+            }
 
             //Calculate the distance
             $calculator = new DistanceCalculator();
