@@ -35,24 +35,44 @@ class GeoSorter extends Collection
         $items          =   $collection;
         $distanceArray  =   [];
         $postcodeField  =   config('geosorter.postcodeField');
+        $sortOrder      =   config('geosorter.sortOrder');
         $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($postcode),0,-3)))->first();
         $source         =   new Coordinate\Decimal($sourceOutcode->lat, $sourceOutcode->long);
 
-        foreach($items as $item)
-        {
-            $itemPostcode   =   $item->$postcodeField;
-            $outcode        =   GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($itemPostcode),0,-3)))->first();
+        foreach($items as $item) {
+            $itemPostcode = $item->$postcodeField;
+            $outcode = GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($itemPostcode), 0, -3)))->first();
 
             //Calculate the distance
-            $calculator     =   new DistanceCalculator();
-            $destination    =   new Coordinate\Decimal($outcode->lat, $outcode->long);
-            $distance       =   $calculator->getDistance($source, $destination);
+            $calculator = new DistanceCalculator();
+            $destination = new Coordinate\Decimal($outcode->lat, $outcode->long);
+            $distance = $calculator->getDistance($source, $destination);
 
-            $distanceItem   =   [
-                'id'        =>  $item->id,
-                'distance'  =>  $distance
+            $distanceItem = [
+                'id' => $item->id,
+                'distance' => $distance
             ];
-            $distanceArray[]    =   $distanceItem;
+            $distanceArray[] = $distanceItem;
+        }
+
+        /*
+         * Sort the results by 'distance' in the user defined order.
+         */
+        // Check if PHP7 or above for spaceship operator
+        if(defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION >= 7) {
+            uasort($distanceArray, function ($item1, $item2) use ($sortOrder) {
+                if($sortOrder == 'SORT_ASC'){
+                    return $item1['distance'] <=> $item2['distance'];
+                }else{
+                    return $item2['distance'] <=> $item1['distance'];
+                }
+            });
+        }else{
+            $sortedArray = [];
+            foreach($distanceArray as $key => $row) {
+                $sortedArray[$key] = $row['distance'];
+            }
+            array_multisort($sortedArray, $sortOrder, $distanceArray);
         }
 
         return $distanceArray;
