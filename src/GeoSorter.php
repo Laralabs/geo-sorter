@@ -36,6 +36,9 @@ class GeoSorter extends Collection
         $distanceArray  =   [];
         $postcodeField  =   config('geosorter.postcodeField');
         $sortOrder      =   config('geosorter.sortOrder');
+        //Tidy up the postcode, make uppercase and remove spaces
+        $postcode       =   str_replace(' ', '', $postcode);
+        $postcode       =   strtoupper($postcode);
         $length         =   strlen($postcode);
         if($length > 4) {
             $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($postcode),0,-3)))->first();
@@ -46,6 +49,9 @@ class GeoSorter extends Collection
 
         foreach($items as $item) {
             $itemPostcode = $item->$postcodeField;
+            //Tidy up the postcode, make uppercase and remove spaces
+            $itemPostcode = str_replace(' ', '', $itemPostcode);
+            $itemPostcode = strtoupper($itemPostcode);
             $length = strlen($itemPostcode);
             if($length > 4) {
                 $trimmed = trim(substr(trim($itemPostcode), 0, -3));
