@@ -20,7 +20,7 @@ class CreatePostcodesTable extends Migration
             $table->timestamps();
         });
 
-        DB::unprepared(file_get_contents(__DIR__ . '/sql/uk_postcodes.sql'));
+        DB::unprepared(file_get_contents(__DIR__ . '/../../vendor/laralabs/geo-sorter/migrations/sql/uk_postcodes.sql'));
     }
 
     /**
