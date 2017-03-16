@@ -48,7 +48,8 @@ class GeoSorter extends Collection
             $itemPostcode = $item->$postcodeField;
             $length = strlen($itemPostcode);
             if($length > 4) {
-                $outcode = GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($itemPostcode), 0, -3)))->first();
+                $trimmed = trim(substr(trim($itemPostcode), 0, -3));
+                $outcode = GeoSorterPostcodes::where('area_code', '=', $trimmed)->first();
             }else{
                 $outcome = GeoSorterPostcodes::where('area_code', '=', $itemPostcode)->first();
             }
