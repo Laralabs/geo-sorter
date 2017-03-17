@@ -70,33 +70,16 @@ class GeoSorter extends Collection
             $distance = $calculator->getDistance($mapData['source'], $destination);
 
             $item['distance'] = $distance;
-            $distanceItem = [
-                'id' => $item->id,
-                'distance' => $distance
-            ];
-            $distanceArray[] = $distanceItem;
-
             return $item;
         });
 
         /*
          * Sort the results by 'distance' in the user defined order.
          */
-        // Check if PHP7 or above for spaceship operator
-        if(defined('PHP_MAJOR_VERSION') && PHP_MAJOR_VERSION >= 7) {
-            uasort($distanceArray, function ($item1, $item2) use ($sortOrder) {
-                if($sortOrder == 'SORT_ASC'){
-                    return $item1['distance'] <=> $item2['distance'];
-                }else{
-                    return $item2['distance'] <=> $item1['distance'];
-                }
-            });
+        if($sortOrder == 'SORT_DESC') {
+            $collection = $collection->sortByDesc('distance');
         }else{
-            $sortedArray = [];
-            foreach($distanceArray as $key => $row) {
-                $sortedArray[$key] = $row['distance'];
-            }
-            array_multisort($sortedArray, $sortOrder, $distanceArray);
+            $collection = $collection->sortBy('distance');
         }
 
         return $collection;
