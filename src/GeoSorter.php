@@ -51,7 +51,8 @@ class GeoSorter extends Collection
             'source'        =>  $source
         ];
         $collection = $items->map(function ($item) use ($mapData) {
-            $itemPostcode = $item->$mapData['postcodeField'];
+            $postcodeField = $mapData['postcodeField'];
+            $itemPostcode = $item->$postcodeField;
             //Tidy up the postcode, make uppercase and remove spaces
             $itemPostcode = str_replace(' ', '', $itemPostcode);
             $itemPostcode = strtoupper($itemPostcode);
