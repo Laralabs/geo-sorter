@@ -46,9 +46,12 @@ class GeoSorter extends Collection
             $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', $postcode)->first();
         }
         $source         =   new Coordinate\Decimal($sourceOutcode->lat, $sourceOutcode->long);
-
-        $collection = $items->map(function ($item) {
-            $itemPostcode = $item->$postcodeField;
+        $mapData        =   [
+            'postcodeField' =>  $postcodeField,
+            'source'        =>  $source
+        ];
+        $collection = $items->map(function ($item) use ($mapData) {
+            $itemPostcode = $item->$mapData['postcodeField'];
             //Tidy up the postcode, make uppercase and remove spaces
             $itemPostcode = str_replace(' ', '', $itemPostcode);
             $itemPostcode = strtoupper($itemPostcode);
@@ -57,13 +60,13 @@ class GeoSorter extends Collection
                 $trimmed = trim(substr(trim($itemPostcode), 0, -3));
                 $outcode = GeoSorterPostcodes::where('area_code', '=', $trimmed)->first();
             } else {
-                $outcome = GeoSorterPostcodes::where('area_code', '=', $itemPostcode)->first();
+                $outcode = GeoSorterPostcodes::where('area_code', '=', $itemPostcode)->first();
             }
 
             //Calculate the distance
             $calculator = new DistanceCalculator();
             $destination = new Coordinate\Decimal($outcode->lat, $outcode->long);
-            $distance = $calculator->getDistance($source, $destination);
+            $distance = $calculator->getDistance($mapData['source'], $destination);
 
             $item['distance'] = $distance;
             $distanceItem = [
