@@ -1,6 +1,6 @@
 {
     "name": "laralabs/geo-sorter",
-    "description": "Postcode distance collection sorting package for Laravel 5+",
+    "description": "Postcode distance sorting package for Laravel Eloquent Collections.",
     "license": "MIT License",
     "authors": [
         {
