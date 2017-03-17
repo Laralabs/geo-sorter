@@ -47,16 +47,16 @@ class GeoSorter extends Collection
         }
         $source         =   new Coordinate\Decimal($sourceOutcode->lat, $sourceOutcode->long);
 
-        foreach($items as $item) {
+        $collection = $items->map(function ($item) {
             $itemPostcode = $item->$postcodeField;
             //Tidy up the postcode, make uppercase and remove spaces
             $itemPostcode = str_replace(' ', '', $itemPostcode);
             $itemPostcode = strtoupper($itemPostcode);
             $length = strlen($itemPostcode);
-            if($length > 4) {
+            if ($length > 4) {
                 $trimmed = trim(substr(trim($itemPostcode), 0, -3));
                 $outcode = GeoSorterPostcodes::where('area_code', '=', $trimmed)->first();
-            }else{
+            } else {
                 $outcome = GeoSorterPostcodes::where('area_code', '=', $itemPostcode)->first();
             }
 
@@ -65,12 +65,15 @@ class GeoSorter extends Collection
             $destination = new Coordinate\Decimal($outcode->lat, $outcode->long);
             $distance = $calculator->getDistance($source, $destination);
 
+            $item['distance'] = $distance;
             $distanceItem = [
                 'id' => $item->id,
                 'distance' => $distance
             ];
             $distanceArray[] = $distanceItem;
-        }
+
+            return $item;
+        });
 
         /*
          * Sort the results by 'distance' in the user defined order.
@@ -92,6 +95,6 @@ class GeoSorter extends Collection
             array_multisort($sortedArray, $sortOrder, $distanceArray);
         }
 
-        return $distanceArray;
+        return $collection;
     }
 }
