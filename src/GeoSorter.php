@@ -14,7 +14,6 @@
 namespace Laralabs\GeoSorter;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Ayeo\Geo\Coordinate;
 use Ayeo\Geo\DistanceCalculator;
 
@@ -30,56 +29,90 @@ class GeoSorter extends Collection
         parent::__construct();
     }
 
+    /**
+     * geoSort Function
+     *
+     * Sorts given collection based upon distance from the
+     * given postcode, returns sorted collection.
+     *
+     * @param $collection
+     * @param $postcode
+     * @return mixed
+     */
     public static function geoSort($collection, $postcode)
     {
         $items          =   $collection;
-        $distanceArray  =   [];
+        /*
+         * Pull in configuration options.
+         */
         $postcodeField  =   config('geosorter.postcodeField');
         $sortOrder      =   config('geosorter.sortOrder');
-        //Tidy up the postcode, make uppercase and remove spaces
-        $postcode       =   str_replace(' ', '', $postcode);
-        $postcode       =   strtoupper($postcode);
+        /*
+         * Make postcode uppercase and remove spaces
+         */
+        $postcode       =   str_replace(' ', '', strtoupper($postcode));
+        /*
+         * Check length of postcode to see if we are just dealing with
+         * an outcode.
+         */
         $length         =   strlen($postcode);
         if($length > 4) {
             $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($postcode),0,-3)))->first();
         }else{
             $sourceOutcode  =   GeoSorterPostcodes::where('area_code', '=', $postcode)->first();
         }
+        /*
+         * Create Decimal object from source postcode latitude and longitude
+         * coordinates.
+         */
         $source         =   new Coordinate\Decimal($sourceOutcode->lat, $sourceOutcode->long);
         $mapData        =   [
             'postcodeField' =>  $postcodeField,
             'source'        =>  $source
         ];
-        $collection = $items->map(function ($item) use ($mapData) {
-            $postcodeField = $mapData['postcodeField'];
-            $itemPostcode = $item->$postcodeField;
-            //Tidy up the postcode, make uppercase and remove spaces
-            $itemPostcode = str_replace(' ', '', $itemPostcode);
-            $itemPostcode = strtoupper($itemPostcode);
-            $length = strlen($itemPostcode);
+
+        /*
+         * Iterate through collection, work out item postcode distance from
+         * source, map and populate 'distance' property on collection item.
+         */
+        $collection =   $items->map(function ($item) use ($mapData) {
+            $postcodeField  =   $mapData['postcodeField'];
+            $itemPostcode   =   $item->$postcodeField;
+            /*
+             * Make postcode uppercase and remove spaces
+             */
+            $itemPostcode   =   str_replace(' ', '', strtoupper($itemPostcode));
+            /*
+             * Check length of postcode to see if we are just dealing with
+             * an outcode.
+             */
+            $length         =   strlen($itemPostcode);
             if ($length > 4) {
-                $trimmed = trim(substr(trim($itemPostcode), 0, -3));
-                $outcode = GeoSorterPostcodes::where('area_code', '=', $trimmed)->first();
+                $outcode    =   GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($itemPostcode), 0, -3)))->first();
             } else {
-                $outcode = GeoSorterPostcodes::where('area_code', '=', $itemPostcode)->first();
+                $outcode    =   GeoSorterPostcodes::where('area_code', '=', $itemPostcode)->first();
             }
 
-            //Calculate the distance
-            $calculator = new DistanceCalculator();
-            $destination = new Coordinate\Decimal($outcode->lat, $outcode->long);
-            $distance = $calculator->getDistance($mapData['source'], $destination);
+            if($outcode != null && $mapData['source'] != null) {
+                /*
+                 * Calculate the distance in metres
+                 */
+                $calculator         =   new DistanceCalculator();
+                $destination        =   new Coordinate\Decimal($outcode->lat, $outcode->long);
+                $distance           =   $calculator->getDistance($mapData['source'], $destination);
+                $item['distance']   =   $distance;
+            }
 
-            $item['distance'] = $distance;
             return $item;
         });
 
         /*
-         * Sort the results by 'distance' in the user defined order.
+         * Sort the collection by 'distance' in the user defined order.
          */
         if($sortOrder == 'SORT_DESC') {
-            $collection = $collection->sortByDesc('distance');
+            $collection     =   $collection->sortByDesc('distance');
         }else{
-            $collection = $collection->sortBy('distance');
+            $collection     =   $collection->sortBy('distance');
         }
 
         return $collection;

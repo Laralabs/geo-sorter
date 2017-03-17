@@ -9,6 +9,7 @@
  * @license The MIT License (MIT) See: LICENSE file
  * @copyright Copyright (c) 2017 Matt Clinton
  * @author Matt Clinton <matt@laralabs.uk>
+ * @github
  */
 
 namespace Laralabs\GeoSorter;
@@ -27,14 +28,16 @@ class GeoSorterServiceProvider extends ServiceProvider
         $app = $this->app;
 
         /*
-         * Check if Laravel version is greater than 5.0, vendor:publish not supported in 4.x
+         * Check if Laravel version is greater than 5.0
+         * vendor:publish not supported in 4.x
          */
         if(version_compare($app::VERSION, '5.0') >= 0) {
             $configPath     =   realpath(__DIR__ . '/../config/geosorter.php');
             $migrationPath  =   realpath(__DIR__ . '/../migrations/2017_03_16_000000_create_postcodes_table.php');
 
             /**
-             * Copy configuration and migration files to appropriate directories when user runs php artisan vendor:publish
+             * Copy configuration and migration files to appropriate directories
+             * when user runs php artisan vendor:publish.
              */
             $this->publishes([
                 $configPath     => config_path('geosorter.php')
