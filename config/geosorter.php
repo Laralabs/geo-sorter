@@ -2,5 +2,6 @@
 
 return [
     'postcodeTable'    =>  'postcodes',
-    'sortOrder'        =>  'ASC'
+    'sortOrder'        =>  'ASC',
+    'postcodeField'     =>  'postcode'
 ];
