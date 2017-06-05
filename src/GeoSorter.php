@@ -43,11 +43,35 @@ class GeoSorter extends Collection
     public static function geoSort($collection, $postcode)
     {
         $items          =   $collection;
+        $radius         =   0;
         /*
          * Pull in configuration options.
          */
         $postcodeField  =   config('geosorter.postcodeField');
         $sortOrder      =   config('geosorter.sortOrder');
+        $distanceRadius =   config('geosorter.distanceRadius');
+        $distanceUnit   =   config('geosorter.distanceUnit');
+
+        /*
+         * Calculate distance radius in metres
+         */
+        if($distanceRadius > 0){
+            switch ($distanceUnit) {
+                case 'metres':
+                    //Metres is what we want, do nothing
+                    $radius = $distanceRadius;
+                    break;
+                case 'kilometres':
+                    $radius = $distanceRadius * 1000;
+                    break;
+                case 'miles':
+                    $radius = $distanceRadius * 1609.34;
+                    break;
+                default:
+                    $radius = 0;
+                    break;
+            }
+        }
         /*
          * Make postcode uppercase and remove spaces
          */
@@ -106,6 +130,15 @@ class GeoSorter extends Collection
 
             return $item;
         });
+
+        /*
+         * Apply radius filter if it is set
+         */
+        if($radius > 0) {
+            $collection =   $collection->filter(function($collect) use ($radius){
+                return $collect->distance <= $radius;
+            })->values();
+        }
 
         /*
          * Sort the collection by 'distance' in the user defined order.

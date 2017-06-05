@@ -41,8 +41,10 @@ Once this has been done the configuration file located at `config/geosorter.php`
 
 return [
     'postcodeTable'     =>  'postcodes',
-    'sortOrder'         =>  'SORT_ASC',
-    'postcodeField'     =>  'postcode'
+    'sortOrder'         =>  'ASC',
+    'postcodeField'     =>  'postcode',
+    'distanceRadius'    =>  0,
+    'distanceUnit'      =>  'miles'
 ];
 ```
 
@@ -51,6 +53,10 @@ return [
 `sortOrder` is the order in which the collection will be sorted, this should be set to `SORT_ASC` (Ascending) or `SORT_DESC` (Descending).
 
 `postcodeField` is the name of the postcode field in your collection.
+
+`distanceRadius` is the radius value, if set to greater than `0`; only return results whose distance is less than or equal to the radius value. 
+
+`distanceUnit` is the unit of measurement for `distanceRadius`, supports: `metres`, `kilometres` or `miles`.
 
 ## Example
 
