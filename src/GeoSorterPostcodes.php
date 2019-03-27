@@ -1,13 +1,7 @@
 <?php
 /**
- * Laralabs GeoSorter
- *
- * Postcode distance collection sorting package for Laravel 5+
- *
- * GeoSorterPostcodes Model
- *
  * @license The MIT License (MIT) See: LICENSE file
- * @copyright Copyright (c) 2017 Matt Clinton
+ * @copyright Copyright (c) 2019 Matt Clinton
  * @author Matt Clinton <matt@laralabs.uk>
  * @link https://github.com/Laralabs/geo-sorter
  */
@@ -24,12 +18,16 @@ class GeoSorterPostcodes extends Model
     public function __construct()
     {
         parent::__construct();
-        return $this->table = config('geosorter.postcodeTable');
+
+        $this->table = config('geosorter.postcode_table') ?? 'geo_sorter_postcodes';
     }
+
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * @var array
      */
-    protected $table;
+    protected $fillable = [
+        'area_code',
+        'lat',
+        'long'
+    ];
 }
