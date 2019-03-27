@@ -22,18 +22,10 @@ class GeoSorterPostcodes extends Model
     ];
 
     /**
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
      * @var string
      */
     protected $table = 'geo_sorter_postcodes';
 
-    /*
-     * Get the postcodes table name from config
-     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
