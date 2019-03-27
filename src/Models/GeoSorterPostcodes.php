@@ -6,12 +6,26 @@
  * @link https://github.com/Laralabs/geo-sorter
  */
 
-namespace Laralabs\GeoSorter;
+namespace Laralabs\GeoSorter\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class GeoSorterPostcodes extends Model
 {
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'area_code',
+        'lat',
+        'long'
+    ];
+
+    /**
+     * @var string
+     */
+    protected $table = 'geo_sorter_postcodes';
+
     /*
      * Get the postcodes table name from config
      */
@@ -21,13 +35,4 @@ class GeoSorterPostcodes extends Model
 
         $this->table = config('geosorter.postcode_table') ?? 'geo_sorter_postcodes';
     }
-
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'area_code',
-        'lat',
-        'long'
-    ];
 }

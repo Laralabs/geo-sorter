@@ -15,6 +15,7 @@ use Laralabs\GeoSorter\Exceptions\InvalidFieldException;
 use Laralabs\GeoSorter\Exceptions\InvalidPostcodeException;
 use Laralabs\GeoSorter\Exceptions\InvalidUnitException;
 use Laralabs\GeoSorter\Exceptions\PostcodeNotFoundException;
+use Laralabs\GeoSorter\Models\GeoSorterPostcodes;
 
 class GeoSorter
 {

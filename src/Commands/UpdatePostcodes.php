@@ -11,7 +11,7 @@ namespace Laralabs\GeoSorter\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Laralabs\GeoSorter\Exceptions\UpdateFailedException;
-use Laralabs\GeoSorter\GeoSorterPostcodes;
+use Laralabs\GeoSorter\Models\GeoSorterPostcodes;
 
 class UpdatePostcodes extends Command
 {
@@ -56,7 +56,7 @@ class UpdatePostcodes extends Command
 
             // Skip first line and only create record if there are active postcodes.
             if ($i > 0 && $line[9] != 0) {
-                GeoSorterPostcodes::create([
+                $district = GeoSorterPostcodes::create([
                     'area_code' => $line[0],
                     'lat' => $line[1],
                     'long' => $line[2]
