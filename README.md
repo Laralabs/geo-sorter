@@ -17,12 +17,12 @@ php artisan vendor:publish --tag=geosorter-config
 Edit the configuration file and set your desired settings. If you want to use a custom database table name, set it here and cache your config before moving onto the next step.
 
 Create the postcodes table by running the following command:
-```php
+```
 php artisan migrate
 ```
 
 Once the database table has been created, run the following command to populate it with the latest UK Postcode District data.
-```php
+```
 php artisan geosorter:update
 ```
 
