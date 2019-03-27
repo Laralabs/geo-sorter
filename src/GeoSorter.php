@@ -49,8 +49,6 @@ class GeoSorter
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->field = config('geosorter.postcode_field');
         $this->sortOrder = config('geosorter.sort_order');
         $this->radius = config('geosorter.distance_radius') ?? 0;
