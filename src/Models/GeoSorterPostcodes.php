@@ -22,6 +22,11 @@ class GeoSorterPostcodes extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * @var string
      */
     protected $table = 'geo_sorter_postcodes';
