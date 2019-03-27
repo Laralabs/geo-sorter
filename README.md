@@ -36,7 +36,6 @@ $collection = Addresses::all();
 $postcode   = 'B61 XYZ';
 
 $collection = GeoSorter::sortByPostcode($collection, $postcode, 'ASC');
-
 ```
 
 Helper:
@@ -46,7 +45,6 @@ $collection = Addresses::all();
 $postcode   = 'B61 XYZ';
 
 $collection = geo_sorter()->sortByPostcode($collection, $postcode);
-
 ```
 
 The above code would sort the Addresses collection in distance from the given postcode `B61 XYZ`.
