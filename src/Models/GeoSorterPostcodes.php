@@ -34,9 +34,9 @@ class GeoSorterPostcodes extends Model
     /*
      * Get the postcodes table name from config
      */
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
-        parent::__construct();
+        parent::__construct($attributes);
 
         $this->table = config('geosorter.postcode_table') ?? 'geo_sorter_postcodes';
     }
