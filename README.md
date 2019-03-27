@@ -53,9 +53,6 @@ The above code would sort the Addresses collection in distance from the given po
 
 [Ayeo/Geo](https://github.com/ayeo/geo) is used to calculate the distance between coordinates.
 
-## :orange_book: Documentation
-Full documentation can be found [on the docs website](https://docs.laralabs.uk/timezone/).
-
 ## :speech_balloon: Support
 Please raise an issue on GitHub if there is a problem.
 
