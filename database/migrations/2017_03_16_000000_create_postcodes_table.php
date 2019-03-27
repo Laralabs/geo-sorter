@@ -30,9 +30,9 @@ class CreatePostcodesTable extends Migration
     {
         Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
-            $table->string('area_code');
-            $table->double('lat');
-            $table->double('long');
+            $table->string('area_code')->unique();
+            $table->decimal('lat', 16, 12);
+            $table->decimal('long', 16, 12);
             $table->timestamps();
         });
     }
