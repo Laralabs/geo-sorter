@@ -9,7 +9,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostcodesTable extends Migration
+class CreateGeoSorterPostcodesTable extends Migration
 {
     /**
      * @var string
