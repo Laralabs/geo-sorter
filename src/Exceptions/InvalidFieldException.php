@@ -16,7 +16,7 @@ class InvalidFieldException extends \Exception
     {
         parent::__construct($message, $code, $previous);
 
-        if (!is_string($value)) {
+        if (is_string($value) === false) {
             $this->message = 'Invalid postcode_field configuration value "' . $value . '", it must be a string.';
         } else {
             $this->message = 'Postcode field "' . $value . '" not found on item in collection';
