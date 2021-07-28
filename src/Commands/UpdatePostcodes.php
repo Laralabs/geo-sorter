@@ -12,52 +12,42 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Laralabs\GeoSorter\Exceptions\UpdateFailedException;
 use Laralabs\GeoSorter\Models\GeoSorterPostcodes;
+use Throwable;
 
 class UpdatePostcodes extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $signature = 'geosorter:update';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $description = 'Updates geo sorter postcode district data from doogal.co.uk';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $url = 'https://www.doogal.co.uk/PostcodeDistrictsCSV.ashx';
 
     /**
      * Execute the console command.
      *
-     * @throws UpdateFailedException
+     * @throws UpdateFailedException|Throwable
      */
-    public function handle()
+    public function handle(): void
     {
-        $handle = @fopen($this->url, 'r');
+        $handle = fopen($this->url, 'r');
 
-        if (!$handle) {
-            throw new UpdateFailedException();
-        }
+        throw_if($handle === false, new UpdateFailedException());
 
         DB::table(config('geosorter.postcode_table'))->truncate();
 
         $i = 0;
 
-        while (!feof($handle)) {
+        while (feof($handle) === false) {
             $line = fgetcsv($handle);
 
             // Skip first line and only create record if there are active postcodes.
-            if ($i > 0 && $line[9] != 0) {
-                $district = GeoSorterPostcodes::create([
+            if ($i > 0 && (int) $line[9] !== 0) {
+                GeoSorterPostcodes::updateOrCreate([
                     'area_code' => $line[0],
+                ], [
                     'lat' => $line[1],
                     'long' => $line[2]
                 ]);

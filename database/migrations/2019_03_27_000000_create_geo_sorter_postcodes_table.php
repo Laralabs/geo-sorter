@@ -11,9 +11,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateGeoSorterPostcodesTable extends Migration
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $table;
 
     public function __construct()
@@ -21,14 +19,9 @@ class CreateGeoSorterPostcodesTable extends Migration
         $this->table = config('geosorter.postcode_table') ?? 'geo_sorter_postcodes';
     }
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
-        Schema::create($this->table, function (Blueprint $table) {
+        Schema::create($this->table, function (Blueprint $table): void {
             $table->increments('id');
             $table->string('area_code')->unique();
             $table->decimal('lat', 12, 8);
@@ -37,12 +30,7 @@ class CreateGeoSorterPostcodesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::drop($this->table);
     }

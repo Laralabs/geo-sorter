@@ -6,11 +6,11 @@
  * @link https://github.com/Laralabs/geo-sorter
  */
 
-if (!function_exists('geo_sorter')) {
-    function geo_sorter()
-    {
-        $geoSorter = app('geosorter');
+use Laralabs\GeoSorter\GeoSorter;
 
-        return $geoSorter;
+if (!function_exists('geo_sorter')) {
+    function geo_sorter(): GeoSorter
+    {
+        return app('geosorter');
     }
 }

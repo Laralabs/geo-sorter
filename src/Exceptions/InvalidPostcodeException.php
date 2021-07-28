@@ -8,6 +8,8 @@
 
 namespace Laralabs\GeoSorter\Exceptions;
 
+use Throwable;
+
 class InvalidPostcodeException extends \Exception
 {
     public function __construct($value, string $message = "", int $code = 0, Throwable $previous = null)

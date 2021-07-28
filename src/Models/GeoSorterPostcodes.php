@@ -12,18 +12,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class GeoSorterPostcodes extends Model
 {
-    /**
-     * @var array
-     */
+    /** @var string[] */
     protected $fillable = [
         'area_code',
         'lat',
         'long'
     ];
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $table = 'geo_sorter_postcodes';
 
     public function __construct(array $attributes = [])
