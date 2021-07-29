@@ -44,7 +44,7 @@ class UpdatePostcodes extends Command
             $line = fgetcsv($handle);
 
             // Skip first line and only create record if there are active postcodes.
-            if ($i > 0 && (int) $line[9] !== 0) {
+            if ($i > 0 && (int) $line[9] !== 0 && filled($line[1]) && filled($line[2])) {
                 GeoSorterPostcodes::updateOrCreate([
                     'area_code' => $line[0],
                 ], [
