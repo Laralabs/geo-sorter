@@ -159,7 +159,7 @@ class GeoSorter
         return str_replace(' ', '', strtoupper($postcode));
     }
 
-    private function getOutcode(string $postcode): GeoSorterPostcodes
+    private function getOutcode(string $postcode): ?GeoSorterPostcodes
     {
         if (strlen($postcode) > 4) {
             return GeoSorterPostcodes::where('area_code', '=', trim(substr(trim($postcode), 0, -3)))
